@@ -1,3 +1,4 @@
+/*
 package cn.apeius.mybatis.impl;
 
 import cn.apeius.mybatis.dao.UserDao;
@@ -6,10 +7,12 @@ import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
 
+*/
 /**
  * Created by Asus on 2016/8/3.
- */
-public class UserDaoImpl implements UserDao {
+ *//*
+
+public class UserDaoImpl implements UserMapper {
     private SqlSession sqlSession;
     public UserDaoImpl(SqlSession sqlSession){
         this.sqlSession = sqlSession;
@@ -34,3 +37,4 @@ public class UserDaoImpl implements UserDao {
         sqlSession.delete("user.deleteUserById", id);
     }
 }
+*/

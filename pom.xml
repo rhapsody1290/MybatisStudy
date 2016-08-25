@@ -31,4 +31,44 @@
         </dependency>
     </dependencies>
 
+    <!-- 全局属性配置,定义变量 -->
+    <properties>
+        <!--用来定义war包名称-->
+        <project.build.name>tools</project.build.name>
+        <!--用来定义资源文件的编码格式  -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <defaultGoal>compile</defaultGoal>
+        <plugins>
+            <!--编译插件-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!--源代码编译版本-->
+                    <source>1.6</source>
+                    <!--目标平台编译版本-->
+                    <target>1.6</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>  <!-- “编码 GBK 的不可映射字符”问题的解决 -->
+                </configuration>
+            </plugin>
+
+            <!-- 设置资源文件的编码方式 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

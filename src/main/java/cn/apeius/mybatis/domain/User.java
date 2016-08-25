@@ -1,7 +1,9 @@
 package cn.apeius.mybatis.domain;
 
-import java.util.Date;
+import org.apache.ibatis.type.Alias;
 
+import java.util.Date;
+@Alias("xxx")
 public class User {
 
     private Long id;
