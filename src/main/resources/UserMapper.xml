@@ -13,7 +13,7 @@
     </select>
 
     <!-- parameterType：定义传入参数类型 -->
-    <insert id="addUser" parameterType="cn.apeius.mybatis.domain.User">
+    <insert id="addUser" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         INSERT INTO tb_user VALUES (NULL,#{user_name},#{password},#{name},#{age},#{sex},#{birthday},NOW(),NOW())
     </insert>
     
@@ -24,4 +24,12 @@
     <delete id="deleteUserById" parameterType="java.lang.Long">
         delete from tb_user where id = #{id}
     </delete>
+
+    <select id="login" resultType="cn.apeius.mybatis.domain.User">
+        select * from tb_user where user_name = #{username} and password = #{password}
+    </select>
+
+    <select id="queryUserByTableName" resultType="cn.apeius.mybatis.domain.User">
+        select * from ${tableName}
+    </select>
 </mapper>
