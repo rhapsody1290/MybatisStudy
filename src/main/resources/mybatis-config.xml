@@ -17,6 +17,15 @@
         <package name="cn.apeius.mybatis.domain"/>
     </typeAliases>
 
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <!--数据库方言-->
+            <property name="dialect" value="mysql"/>
+            <!--设置为true时，使用RowBounds分页会进行count查询，即会去查询出总数-->
+            <property name="rowBoundsWithCount" value="true"/>
+        </plugin>
+    </plugins>
+
     <environments default="development">
         <environment id="development">
             <transactionManager type="JDBC"/>
@@ -28,6 +37,7 @@
             </dataSource>
         </environment>
     </environments>
+
     <mappers>
         <package name="cn.apeius.mybatis.mapper"/>
     </mappers>

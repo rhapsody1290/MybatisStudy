@@ -58,9 +58,8 @@ public class OrderMapperTest {
     public void testQueryOrderAndUserLazy(){
         OrderMapper orderMapper = sqlSession.getMapper(OrderMapper.class);
         Order order = orderMapper.queryOrderAndUserLazy("20140921001");
-        //System.out.println(order.getOrder_number());
+        System.out.println(order.getOrder_number());
         System.out.println(order.getUser());
-        System.out.println(order.getUser().getName());
     }
 
 }

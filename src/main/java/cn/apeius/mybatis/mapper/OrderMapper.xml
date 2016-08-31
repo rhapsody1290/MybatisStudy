@@ -55,8 +55,8 @@
         FROM
             tb_order o
         LEFT JOIN tb_user u ON u.id = o.user_id
-        WHERE o.order_number = #{order_number}
         LEFT JOIN tb_orderdetail d ON o.id = d.order_id
+        WHERE o.order_number = #{order_number}
     </select>
 
 
