@@ -14,9 +14,11 @@ import java.util.List;
 
 public class UserDaoImpl implements UserMapper {
     private SqlSession sqlSession;
+
     public UserDaoImpl(SqlSession sqlSession){
         this.sqlSession = sqlSession;
     }
+
     public User queryUserById(Long id) {
         return sqlSession.selectOne("user.queryUserById", id);
     }

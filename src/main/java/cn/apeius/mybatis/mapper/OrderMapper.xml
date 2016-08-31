@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.apeius.mybatis.mapper.OrderMapper">
+    <select id="queryOrderAndUserLazy" resultMap="lazyOrderUserResultMap">
+        SELECT * FROM tb_order WHERE order_number = #{order_number}
+    </select>
+    <resultMap id="lazyOrderUserResultMap" type="Order" autoMapping="true">
+        <id property="id" column="id"></id>
+        <association property="user" javaType="User" column="user_id" select="queryUserById"/>
+    </resultMap>
+    <select id="queryUserById" resultType="User">
+        SELECT * FROM tb_user where id = #{id}
+    </select>
+
+
+    <resultMap id="orderUserResultMap" type="Order" autoMapping="true">
+        <id property="id" column="order_id"/>
+        <association property="user" javaType="User">
+            <id property="id" column="user_id"/>
+            <result property="user_name" column="user_name"/>
+        </association>
+    </resultMap>
+    <select id="queryOrderAndUserByOrderNumber" resultMap="orderUserResultMap">
+        SELECT
+            *,o.id as order_id
+        FROM
+            tb_order o
+        LEFT JOIN tb_user u ON u.id = o.user_id
+        WHERE
+          o.order_number = #{order_number}
+    </select>
+
+    <resultMap id="orderUserDetailResultMap" type="Order" autoMapping="true">
+        <id property="id" column="order_id"/>
+        <association property="user" javaType="User">
+            <id property="id" column="user_id"/>
+            <result property="user_name" column="user_name"/>
+        </association>
+        <!--collection 定义集合
+            property：集合的属性名
+            javaType：集合的类型
+            ofType：集合中成员类型
+            子标签内：填id和result
+        -->
+        <collection property="orderDetails" javaType="List" ofType="OrderDetail">
+            <id property="id" column="detail_id"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryOrderAndUserAndDetailByOrderNumber" resultMap="orderUserDetailResultMap">
+        SELECT
+            *,o.id as order_id,d.id as detail_id
+        FROM
+            tb_order o
+        LEFT JOIN tb_user u ON u.id = o.user_id
+        WHERE o.order_number = #{order_number}
+        LEFT JOIN tb_orderdetail d ON o.id = d.order_id
+    </select>
+
+
+    <resultMap id="orderUserDetailItemResultMap" type="Order" autoMapping="true">
+        <id property="id" column="order_id"/>
+        <association property="user" javaType="User">
+            <id property="id" column="user_id"/>
+            <result property="user_name" column="user_name"/>
+        </association>
+        <collection property="orderDetails" javaType="List" ofType="OrderDetail">
+            <id property="id" column="detail_id"/>
+            <association property="item" javaType="Item">
+                <id property="id" column="item_id"></id>
+                <result property="item_name" column="item_name"/>
+            </association>
+        </collection>
+    </resultMap>
+    <select id="queryOrdreAndUserAndDetailAndItemByOrderNumber" resultMap="orderUserDetailItemResultMap">
+        SELECT
+            *,
+            o.id as order_id,
+            d.id as detail_id
+        FROM
+            tb_order o
+        LEFT JOIN tb_user u ON u.id = o.user_id
+        LEFT JOIN tb_orderdetail d ON o.id = d.order_id
+        LEFT JOIN tb_item i ON d.item_id = i.id
+        WHERE o.order_number = #{order_number}
+    </select>
+
+</mapper>

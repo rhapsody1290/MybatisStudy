@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace：名字空间，唯一标识，不需要特别的起名称，只要保证所有的mapper中唯一即可-->
 <mapper namespace="cn.apeius.mybatis.mapper.UserMapper">
-    <select id="queryUserById" resultType="cn.apeius.mybatis.domain.User">
+    <select id="queryUserById" resultType="User">
         select * from tb_user where id = #{id}
     </select>
     <!-- resultType为结果集映射的java的类型 -->
@@ -13,15 +13,15 @@
     </select>
 
     <!-- parameterType：定义传入参数类型 -->
-    <insert id="addUser" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+    <insert id="addUser">
         INSERT INTO tb_user VALUES (NULL,#{user_name},#{password},#{name},#{age},#{sex},#{birthday},NOW(),NOW())
     </insert>
     
-    <update id="updateUser" parameterType="cn.apeius.mybatis.domain.User">
+    <update id="updateUser">
         UPDATE tb_user SET user_name = #{user_name},password = #{password},name = #{name}, age = #{age}, sex = #{sex}, birthday = #{birthday}, updated = NOW() WHERE id=#{id}
     </update>
 
-    <delete id="deleteUserById" parameterType="java.lang.Long">
+    <delete id="deleteUserById">
         delete from tb_user where id = #{id}
     </delete>
 

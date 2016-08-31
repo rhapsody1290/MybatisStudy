@@ -3,7 +3,6 @@ package cn.apeius.mybatis.domain;
 import org.apache.ibatis.type.Alias;
 
 import java.util.Date;
-@Alias("xxx")
 public class User {
 
     private Long id;
@@ -106,7 +105,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "cn.apeius.mybatis.domain.User [id=" + id + ", userName=" + user_name + ", password=" + password + ", name=" + name
+        return "cn.apeius.mybatis.domain.User [id=" + id + ", user_name=" + user_name + ", password=" + password + ", name=" + name
                 + ", age=" + age + ", sex=" + sex + ", birthday=" + birthday + ", created=" + created
                 + ", updated=" + updated + "]";
     }
