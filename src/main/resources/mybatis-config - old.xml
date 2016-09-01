@@ -3,12 +3,20 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <!--引入外部的properties文件，resource指定文件所在路径-->
+    <properties resource="jdbc.properties"></properties>
+
     <settings>
         <!-- 打开延迟加载的开关 -->
         <setting name="lazyLoadingEnabled" value="true"/>
         <!-- 将积极加载改为消极加载，即延迟加载 -->
         <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
+
+    <typeAliases>
+        <package name="cn.apeius.mybatis.domain"/>
+    </typeAliases>
+
     <plugins>
         <plugin interceptor="com.github.pagehelper.PageHelper">
             <!--数据库方言-->
@@ -17,4 +25,20 @@
             <property name="rowBoundsWithCount" value="true"/>
         </plugin>
     </plugins>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <package name="cn.apeius.mybatis.mapper"/>
+    </mappers>
 </configuration>
