@@ -49,4 +49,15 @@ public class OrderDetail {
     public void setTotal_price(double total_price) {
         this.total_price = total_price;
     }
+
+    @Override
+    public String toString() {
+        return "OrderDetail{" +
+                "id=" + id +
+                ", order=" + order +
+                ", item=" + item +
+                ", total_price=" + total_price +
+                ", status=" + status +
+                '}';
+    }
 }

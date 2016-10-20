@@ -42,4 +42,14 @@ public class Order {
     public void setUser(User user) {
         this.user = user;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", user=" + user +
+                ", order_number='" + order_number + '\'' +
+                ", orderDetails=" + orderDetails +
+                '}';
+    }
 }

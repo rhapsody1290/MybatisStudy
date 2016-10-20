@@ -7,6 +7,7 @@ public class Item {
     private int id;
     private String item_name;
     private float item_price;
+    private String item_detail;
 
     public int getId() {
         return id;
@@ -40,5 +41,13 @@ public class Item {
         this.item_price = item_price;
     }
 
-    private String item_detail;
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", item_name='" + item_name + '\'' +
+                ", item_price=" + item_price +
+                ", item_detail='" + item_detail + '\'' +
+                '}';
+    }
 }

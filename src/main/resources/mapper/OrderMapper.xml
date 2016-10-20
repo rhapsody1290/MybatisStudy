@@ -3,52 +3,102 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.apeius.mybatis.mapper.OrderMapper">
+
+    <!--association：嵌套查询-->
+    <!--方式零-->
+    <!--查询订单和用户-->
     <select id="queryOrderAndUserLazy" resultMap="lazyOrderUserResultMap">
         SELECT * FROM tb_order WHERE order_number = #{order_number}
     </select>
-    <resultMap id="lazyOrderUserResultMap" type="Order" autoMapping="true">
+    <!--指定Order中user成员变量的详细装配方式-->
+    <resultMap id="lazyOrderUserResultMap" type="Order">
+        <!-- 一个 ID 结果，标记结果作为 ID 可以帮助提高整体效能 -->
         <id property="id" column="id"></id>
+        <!---->
         <association property="user" javaType="User" column="user_id" select="queryUserById"/>
     </resultMap>
+    <!--查询用户-->
     <select id="queryUserById" resultType="User">
         SELECT * FROM tb_user where id = #{id}
     </select>
 
+    <!--方式一-->
+    <!--&lt;!&ndash;联合查询订单和用户，一对一关系&ndash;&gt;-->
+    <!--<select id="queryOrderAndUserByOrderNumber" resultMap="orderUserResultMap">-->
+        <!--SELECT-->
+            <!--o.id as order_id,-->
+            <!--o.user_id as order_user_id,-->
+            <!--o.order_number as order_order_number,-->
+            <!--u.id as user_id,-->
+            <!--u.user_name as user_user_name,-->
+            <!--u.password as user_password,-->
+            <!--u.name as user_name,-->
+            <!--u.age as user_age,-->
+            <!--u.sex as user_sex,-->
+            <!--u.birthday as user_birthday,-->
+            <!--u.created as user_created,-->
+            <!--u.updated as user_updated-->
+        <!--FROM-->
+            <!--tb_order o-->
+        <!--LEFT JOIN tb_user u ON u.id = o.user_id-->
+        <!--WHERE-->
+          <!--o.order_number = #{order_number}-->
+    <!--</select>-->
+    <!--<resultMap id="orderUserResultMap" type="Order" autoMapping="true">-->
+        <!--<id property="id" column="order_id"/>-->
+        <!--<result property="order_number" column="order_order_number"/>&lt;!&ndash; 有顺序要求，必须放在id后&ndash;&gt;-->
+        <!--<association property="user" javaType="User">-->
+            <!--<id property="id" column="user_id"/>-->
+            <!--<result property="user_name" column="user_name"/>-->
+            <!--<result property="password" column="user_password"/>-->
+            <!--<result property="name" column="user_name"/>-->
+            <!--<result property="age" column="user_age"/>-->
+            <!--<result property="sex" column="user_sex"/>-->
+            <!--<result property="birthday" column="user_birthday"/>-->
+            <!--<result property="created" column="user_created"/>-->
+            <!--<result property="updated" column="user_updated"/>-->
+        <!--</association>-->
+    <!--</resultMap>-->
 
-    <resultMap id="orderUserResultMap" type="Order" autoMapping="true">
-        <id property="id" column="order_id"/>
-        <association property="user" javaType="User">
-            <id property="id" column="user_id"/>
-            <result property="user_name" column="user_name"/>
-        </association>
-    </resultMap>
+    <!--方式二-->
+    <!--联合查询订单和用户，一对一关系-->
+    <!--<select id="queryOrderAndUserByOrderNumber" resultMap="orderUserResultMap">-->
+        <!--SELECT-->
+          <!--*,u.id as user_id,o.id as order_id-->
+        <!--FROM-->
+          <!--tb_order o-->
+        <!--LEFT JOIN tb_user u ON u.id = o.user_id-->
+        <!--WHERE-->
+          <!--o.order_number = #{order_number}-->
+    <!--</select>-->
+    <!--<resultMap id="orderUserResultMap" type="Order" autoMapping="true">-->
+        <!--<id property="id" column="order_id"/>-->
+        <!--<association property="user" javaType="User" autoMapping="true">-->
+            <!--<id property="id" column="user_id"/>-->
+        <!--</association>-->
+    <!--</resultMap>-->
+
+    <!--方式三-->
+    <!--联合查询订单和用户，一对一关系-->
     <select id="queryOrderAndUserByOrderNumber" resultMap="orderUserResultMap">
         SELECT
-            *,o.id as order_id
+        *,u.id as user_id,o.id as order_id
         FROM
-            tb_order o
+        tb_order o
         LEFT JOIN tb_user u ON u.id = o.user_id
         WHERE
-          o.order_number = #{order_number}
+        o.order_number = #{order_number}
     </select>
-
-    <resultMap id="orderUserDetailResultMap" type="Order" autoMapping="true">
+    <resultMap id="orderUserResultMap" type="Order" autoMapping="true">
         <id property="id" column="order_id"/>
-        <association property="user" javaType="User">
-            <id property="id" column="user_id"/>
-            <result property="user_name" column="user_name"/>
-        </association>
-        <!--collection 定义集合
-            property：集合的属性名
-            javaType：集合的类型
-            ofType：集合中成员类型
-            子标签内：填id和result
-        -->
-        <collection property="orderDetails" javaType="List" ofType="OrderDetail">
-            <id property="id" column="detail_id"/>
-        </collection>
+        <association property="user" javaType="User" resultMap="user"/>
+    </resultMap>
+    <resultMap id="user" type="User" autoMapping="true">
+        <id property="id" column="user_id"/>
     </resultMap>
 
+
+    <!--collection：1：N-->
     <select id="queryOrderAndUserAndDetailByOrderNumber" resultMap="orderUserDetailResultMap">
         SELECT
             *,o.id as order_id,d.id as detail_id
@@ -58,27 +108,26 @@
         LEFT JOIN tb_orderdetail d ON o.id = d.order_id
         WHERE o.order_number = #{order_number}
     </select>
-
-
-    <resultMap id="orderUserDetailItemResultMap" type="Order" autoMapping="true">
+    <resultMap id="orderUserDetailResultMap" type="Order" autoMapping="true">
         <id property="id" column="order_id"/>
-        <association property="user" javaType="User">
+        <association property="user" javaType="User" autoMapping="true">
             <id property="id" column="user_id"/>
-            <result property="user_name" column="user_name"/>
         </association>
-        <collection property="orderDetails" javaType="List" ofType="OrderDetail">
+        <!--collection 定义集合
+            property：集合的属性名
+            javaType：集合的类型
+            ofType：集合中成员类型
+            子标签内：填id和result
+        -->
+        <collection property="orderDetails" javaType="List" ofType="OrderDetail" autoMapping="true">
             <id property="id" column="detail_id"/>
-            <association property="item" javaType="Item">
-                <id property="id" column="item_id"></id>
-                <result property="item_name" column="item_name"/>
-            </association>
         </collection>
     </resultMap>
+
+    <!--查询订单，查询出下单人信息并且查询出订单详情中的商品数据 N:N-->
     <select id="queryOrdreAndUserAndDetailAndItemByOrderNumber" resultMap="orderUserDetailItemResultMap">
         SELECT
-            *,
-            o.id as order_id,
-            d.id as detail_id
+            *
         FROM
             tb_order o
         LEFT JOIN tb_user u ON u.id = o.user_id
@@ -86,5 +135,17 @@
         LEFT JOIN tb_item i ON d.item_id = i.id
         WHERE o.order_number = #{order_number}
     </select>
+    <resultMap id="orderUserDetailItemResultMap" type="Order" autoMapping="true">
+        <id property="id" column="order_id"/>
+        <association property="user" javaType="User" autoMapping="true">
+            <id property="id" column="user_id"/>
+        </association>
+        <collection property="orderDetails" javaType="List" ofType="OrderDetail" autoMapping="true">
+            <id property="id" column="detail_id"/>
+            <association property="item" javaType="Item" autoMapping="true">
+                <id property="id" column="item_id"></id>
+            </association>
+        </collection>
+    </resultMap>
 
 </mapper>
